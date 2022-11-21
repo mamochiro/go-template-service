@@ -1,12 +1,12 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "Product Service",
+    "title": "Go template Service",
     "version": "1.0",
     "contact": {
-      "name": "go-grpc-gateway-tutoria project",
+      "name": "blueprint-roa-golang-grpc-gateway",
       "url": "http://localhost:3001",
-      "email": "teerasak.n@existing.co"
+      "email": "sarawut.nawawisitkul@gmail.co.th"
     }
   },
   "schemes": [
@@ -19,14 +19,14 @@
     "application/json"
   ],
   "paths": {
-    "/api/v1/product": {
-      "post": {
-        "operationId": "ProductService_Create",
+    "/api/v1/ping": {
+      "get": {
+        "operationId": "PingPongService_StartPing",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/api_v1CreateResponse"
+              "$ref": "#/definitions/api_v1PingPong"
             }
           },
           "404": {
@@ -45,48 +45,39 @@
         },
         "parameters": [
           {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/api_v1CreateRequest"
-            }
+            "name": "msg",
+            "description": "@inject_tag: validate:\"required,min=3\".",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "ball",
+            "description": "@inject_tag: validate:\"required,min=10\".",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
           }
         ],
         "tags": [
-          "ProductService"
+          "PingPongService"
         ]
       }
     }
   },
   "definitions": {
-    "api_v1CreateRequest": {
+    "api_v1PingPong": {
       "type": "object",
       "properties": {
-        "name": {
+        "msg": {
           "type": "string",
-          "title": "@inject_tag: validate:\"required\""
+          "title": "@inject_tag: validate:\"required,min=3\""
         },
-        "detail": {
-          "type": "string",
-          "title": "@inject_tag: validate:\"required\""
-        },
-        "brand": {
-          "type": "string",
-          "title": "@inject_tag: validate:\"required\""
-        },
-        "price": {
-          "type": "string",
-          "title": "@inject_tag: validate:\"required\""
-        }
-      }
-    },
-    "api_v1CreateResponse": {
-      "type": "object",
-      "properties": {
-        "id": {
+        "ball": {
           "type": "integer",
-          "format": "int32"
+          "format": "int32",
+          "title": "@inject_tag: validate:\"required,min=10\""
         }
       }
     },

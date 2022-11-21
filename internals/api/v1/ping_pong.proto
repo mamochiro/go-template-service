@@ -1,8 +1,36 @@
-  
 syntax = "proto3";
 
 package api_v1;
+import "google/api/annotations.proto";
+import "protocGenSwagger/options/annotations.proto";
+
 option go_package = "/.;api_v1";
+
+option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
+  info: {
+    title: "Go template Service"
+    version: "1.0"
+    contact: {
+      name: "blueprint-roa-golang-grpc-gateway"
+      url: "http://localhost:3001"
+      email: "sarawut.nawawisitkul@gmail.co.th"
+    }
+  }
+  schemes: HTTP
+  consumes: "application/json"
+  produces: "application/json"
+  responses: {
+    key: "404"
+    value: {
+      description: "Returned when the resource does not exist."
+      schema: {
+        json_schema: {
+          type: STRING
+        }
+      }
+    }
+  }
+};
 
 message PingPong {
   // @inject_tag: validate:"required,min=3"
@@ -12,5 +40,9 @@ message PingPong {
 }
 
 service PingPongService {
-  rpc StartPing (PingPong) returns (PingPong) {}
+  rpc StartPing (PingPong) returns (PingPong)  {
+    option (google.api.http) = {
+      get: "/api/v1/ping"
+    };
+  }
 }

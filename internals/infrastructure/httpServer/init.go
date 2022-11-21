@@ -21,7 +21,7 @@ type Server struct {
 }
 
 func (s *Server) Configure(ctx context.Context, opts []grpc.DialOption) {
-	apiV1.RegisterInfoServiceHandlerFromEndpoint(ctx, s.Server, "0.0.0.0:"+strconv.Itoa(s.Config.Port), opts)
+	apiV1.RegisterPingPongServiceHandlerFromEndpoint(ctx, s.Server, "0.0.0.0:"+strconv.Itoa(s.Config.Port), opts)
 }
 
 func NewServer(config config.Configuration, rmux *runtime.ServeMux, httpMux *http.ServeMux, pingPong *controller.PingPongController) *Server {

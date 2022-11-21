@@ -8,5 +8,5 @@ func (s *Server) swager() {
 	s.HttpMux.Handle("/swagger-ui/", http.StripPrefix("/swagger-ui", fs))
 }
 func serveSwagger(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "swagger/info.swagger.json")
+	http.ServeFile(w, r, "www/swagger.json")
 }

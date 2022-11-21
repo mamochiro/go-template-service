@@ -6,3 +6,8 @@ bin
 *.pb.gw.go
 *.swagger.json
 cmd/server/__debug_bin
+www/swagger.json
+tmp
+.air.toml
+coverage.out
+coverage.html

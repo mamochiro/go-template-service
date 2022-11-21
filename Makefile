@@ -16,8 +16,16 @@ watch:
 .PHONY: pbgen
 pbgen:
 	protoc --proto_path=internals/api/v1 --go_out=plugins=grpc:pkg/grpc/health/v1 health.proto
-	protoc --proto_path=internals/api/v1 --go_out=plugins=grpc:pkg/api/v1 ping_pong.proto
-	protoc --experimental_allow_proto3_optional --proto_path=internals/api/v1 --proto_path=thirdparty --go_out=plugins=grpc:pkg/api/v1 --grpc-gateway_out=logtostderr=true:pkg/api/v1 --swagger_out=logtostderr=true:swagger info.proto
+	protoc --proto_path=internals/api/v1 --proto_path=thirdparty --go_out=plugins=grpc:pkg/api/v1 --grpc-gateway_out=logtostderr=true:pkg/api/v1 ping_pong.proto
+
+	protoc --proto_path=internals/api/v1 \
+		--proto_path=thirdparty \
+		--go_out=plugins=grpc:pkg/api/v1 \
+		--grpc-gateway_out=logtostderr=true:pkg/api/v1 \
+		--swagger_out=logtostderr=true,allow_merge=true:www \
+		ping_pong.proto
+
+	mv www/apidocs.swagger.json www/swagger.json
 
 	protoc-go-inject-tag -input=pkg/api/v1/ping_pong.pb.go
 	protoc-go-inject-tag -input=pkg/api/v1/info.pb.go
