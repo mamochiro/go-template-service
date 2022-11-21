@@ -2,21 +2,15 @@ package container
 
 import (
 	"fmt"
-	"net/http"
-
+	"github.com/samber/lo"
 	"go-template/internals/config"
-	"go-template/internals/controller"
 	"go-template/internals/infrastructure/database"
 	grpcServer "go-template/internals/infrastructure/grpcServer"
 	httpServer "go-template/internals/infrastructure/httpServer"
 	"go-template/internals/infrastructure/jaeger"
-	"go-template/internals/infrastructure/logrus"
-	"go-template/internals/repository/postgres"
-	servicePing "go-template/internals/service/ping"
 	"go-template/internals/service/ping/wrapper"
 	"go-template/internals/utils"
 
-	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"go.uber.org/dig"
 )
 
@@ -28,22 +22,13 @@ func (c *Container) Configure() error {
 	if err := c.container.Provide(wrapper.WrapInfo, dig.Name("wrapperInfo")); err != nil {
 		return err
 	}
-	servicesConstructors := []interface{}{
-		config.NewConfiguration,
-		grpcServer.NewServer,
-		database.NewServerBase,
-		http.NewServeMux,
-		httpServer.NewServer,
-		runtime.NewServeMux,
-		jaeger.NewJaeger,
-		logrus.NewLog,
-		controller.NewHealthZController,
-		controller.NewPingPongController,
-		servicePing.NewService,
-		postgres.NewRepository,
-		utils.NewUtils,
-		utils.NewCustomValidator,
-	}
+	servicesConstructors := lo.Interleave[interface{}](
+		InfrastructureConstructor,
+		ControllerConstructor,
+		ServicesConstructors,
+		RepositoryConstructors,
+		UtilConstructors,
+	)
 
 	for _, service := range servicesConstructors {
 		if err := c.container.Provide(service); err != nil {
